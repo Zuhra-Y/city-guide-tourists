@@ -2,7 +2,7 @@
 
 ## Description
 
-An app for city guides for tourists with weather conditions to help people navigate the city and make the most of their stay.
+This app will allow tourists, especially those visiting multiple locations, to navigate through their journey with ease by keeping all information regading current weather and attractions in one place. At the start of their visit they can type in every destination planned to see the main attractions and current weather in that area. We specify that tourists visiting multiple locations stand to benefit the most as it will allow them to keep track of what their plan is and potentially postpone or change certain destinations, in the wake of unforeseen weather.
 
 ## Table of Contents
 Installation
