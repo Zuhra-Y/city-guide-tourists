@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const apiKey = '0d142952be23539c1c223a0715da6c6e'; 
+    const apiKey = '286dd95f6799c998fae158ba92641d63'; 
     const form = document.getElementById('search-form');
     const searchInput = document.getElementById('search-input');
     const historyContainer = document.getElementById('history');
