@@ -46,8 +46,9 @@ If travelling for a long time, type in all your planned destinations at the star
 ## Credits
 
 
-Google Places API - https://developers.google.com/maps/documentation/places/web-service
-openWeatherAPI - openweathermap.org/forecast
+Google Places API - https://developers.google.com/maps/documentation/places/web-service.
+
+Open Weather API - openweathermap.org/forecast
 
 ## License
 MIT Licence
