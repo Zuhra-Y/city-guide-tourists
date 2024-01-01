@@ -2,7 +2,7 @@
 
 ## Description
 
-This app will allow tourists, especially those visiting multiple locations, to navigate through their journey with ease by keeping all information regading current weather and attractions in one place. At the start of their visit they can type in every destination planned to see the main attractions and current weather in that area. We specify that tourists visiting multiple locations stand to benefit the most as it will allow them to keep track of what their plan is and potentially postpone or change certain destinations, in the wake of unforeseen weather.
+This app will allow tourists, especially those visiting multiple locations, to navigate their journey easily by keeping all information regarding current weather and attractions in one place. At the start of their visit, they can type in every destination planned to see the main attractions and current weather in that area. We specify that tourists visiting multiple locations stand to benefit the most as it will allow them to keep track of what their plans are and potentially postpone or change certain destinations, in the wake of unforeseen weather.
 
 ## Table of Contents
 Installation
@@ -18,13 +18,13 @@ Copy the SSH key from [github.com/kahdeksan-weather](https://github.com/Zuhra-Y/
 
 Generate an API key from openweathermap.com. Paste in place of the API key used in the javascript.
 
-Generate API key fromn ........ Paste in place of API key used in the javascript
+Generate API key from........ Paste in place of the API key used in the javascript
 
 ## Usage
 Open the webpage in Google Chrome at the following URL. 
 ...............................
 
-Look up your desired holiday destination with the saerch bar.
+Look up your desired holiday destination with the search bar.
 
 ![image]
 
@@ -33,7 +33,7 @@ Use this to look up attractions in the location and current weather conditions.
 ![image]
 
 
-Search for a second location if needed.
+Please search for a second location if you need it.
 
 ![image]
 
@@ -46,11 +46,11 @@ If travelling for a long time, type in all your planned destinations at the star
 ## Credits
 
 
-
-openweathermap.org/forecast
+Google Places API - https://developers.google.com/maps/documentation/places/web-service
+openWeatherAPI - openweathermap.org/forecast
 
 ## License
 MIT Licence
 
 ## Contributions
-Contributor Covenant
+[![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
