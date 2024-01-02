@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    window.searchLocation = function () {
+    function searchLocation() {
         const locationInput = document.getElementById('locationInput');
         const location = locationInput.value.trim();
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        clearMarkers(); // Clear previous markers
+        clearMarkers(); clearAttractionList();
 
         // Pass city name directly to getWeatherData
         getWeatherData(location);
@@ -43,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function clearAttractionList() {
         const attractionList = document.getElementById('attractionList');
         attractionList.innerHTML = '';
+        console.log('clear attraction');
+
     }
 
     function getWeatherData(cityName) {
@@ -158,6 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             if (status === google.maps.places.PlacesServiceStatus.OK) {
                                 clearMarkers();
+                                clearAttractionList();
 
                                 if (results.length > 0) {
                                     map.setCenter(results[0].geometry.location);
