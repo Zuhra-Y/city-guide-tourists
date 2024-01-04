@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
         historyItem.addEventListener('click', function () {
             weatherDataFunction(city);
         });
-        historyContainer.appendChild(historyItem);
+        historyContainer.prepend(historyItem);
     }
 
     function initMap() {
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                               Address: ${place.formatted_address}<br>
                                               Rating: ${place.rating || 'N/A'}`;
 
-                        attractionList.appendChild(listItem);
+                        attractionList.prepend(listItem);
                     }
 
                 },
