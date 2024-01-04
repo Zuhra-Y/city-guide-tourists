@@ -69,6 +69,30 @@ document.addEventListener('DOMContentLoaded', function () {
     function displayWeather(data) {
         const currentWeather = data.list[0];
         const forecastData = data.list.slice(1, 6);
+
+        // Get the first weather condition from the array (assuming it exists)
+        const mainWeatherCondition = currentWeather.weather && currentWeather.weather.length > 0
+        ? currentWeather.weather[0].main
+        : '';
+
+        // Function to get the corresponding Bootstrap icon based on the weather condition
+        const getWeatherIcon = (condition) => {
+            switch (condition.toLowerCase()) {
+                case 'thunderstorm':
+                    return 'bi-cloud-lightning';
+                case 'drizzle':
+                case 'rain':
+                    return 'bi-cloud-rain';
+                case 'snow':
+                    return 'bi-snow';
+                case 'clear':
+                    return 'bi-sun';
+                case 'clouds':
+                    return 'bi-cloud';
+                default:
+                    return 'bi-question';
+            }
+        };
     
         
         todayContainer.innerHTML = `
@@ -77,6 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p>Temp: ${convertToCelsius(currentWeather.main.temp)}°C</p>
             <p>Humidity: ${currentWeather.main.humidity}%</p>
             <p>Wind Speed: ${currentWeather.wind.speed} m/s</p>
+            <p><i class="${getWeatherIcon(mainWeatherCondition)}"></i></p>
         `;
     
         
@@ -85,6 +110,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <p>Date: ${new Date(day.dt * 1000).toLocaleDateString()}</p>
                 <p>Temp: ${convertToCelsius(day.main.temp)}°C</p>
                 <p>Humidity: ${day.main.humidity}%</p>
+                <p>Wind Speed: ${currentWeather.wind.speed} m/s</p>
+            <p><i class="${getWeatherIcon(mainWeatherCondition)}"></i></p>
             </div>
         `).join('');
     }
