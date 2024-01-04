@@ -49,7 +49,7 @@ If travelling for a long time, type in all your planned destinations at the star
 
 ## Features
 
-## Future Enhancements:
+## Future Enhancements
 
 ## Technology
 1. `Bootstrap:` For most of the CSS styling.
@@ -61,7 +61,7 @@ If travelling for a long time, type in all your planned destinations at the star
 7. `API - OpenWeatherApi:` `(https://openweathermap.org/forecast)`:.
 8. `Bootstrap Icons:` For weather icons.
 
-## Website Screenshots
+## Project Screenshots
 
 ## License
 MIT Licence
