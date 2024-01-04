@@ -74,10 +74,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const mainWeatherCondition = currentWeather.weather && currentWeather.weather.length > 0
         ? currentWeather.weather[0].main
         : '';
+        console.log(`Weather condition: ${mainWeatherCondition}`);
 
         // Function to get the corresponding Bootstrap icon based on the weather condition
         const getWeatherIcon = (condition) => {
             switch (condition.toLowerCase()) {
+                case 'clear':
+                    return 'bi-sun-fill';
                 case 'thunderstorm':
                     return 'bi-cloud-lightning';
                 case 'drizzle':
