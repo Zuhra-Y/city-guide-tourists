@@ -18,11 +18,11 @@ This app will allow tourists, especially those visiting multiple locations, to n
 
 
 ## Installation
-Copy the SSH key from [github.com/kahdeksan-weather](https://github.com/Zuhra-Y/city-guide-tourists). Clone the SSH locally.
+Copy the SSH key from [(https://github.com/Zuhra-Y/city-guide-tourists)](https://github.com/Zuhra-Y/city-guide-tourists). Clone the SSH locally.
 
 Generate an API key from openweathermap.com. Paste in place of the API key used in the javascript.
 
-Generate an API key from........ Paste in place of the API key used in the javascript
+Generate an API key from https://developers.google.com/maps/get-started Paste in place of the API key used in the javascript
 
 ## Usage
 Open the webpage in Google Chrome at the following URL. 
