@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const apiKey = '286dd95f6799c998fae158ba92641d63';
     const form = document.getElementById('search-form');
     const searchInput = document.getElementById('locationInput');
+    const locationHeading = document.getElementById('location-heading');
     const historyContainer = document.getElementById('history');
     const todayContainer = document.getElementById('today');
     const forecastContainer = document.getElementById('forecast');
     let map;
     const markers = [];
     const infoWindows = [];
+    let placesService;  // Added placesService as a global variable
 
     form.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -18,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    function searchLocation() {
+    function searchLocation(cityName) {
         const locationInput = document.getElementById('locationInput');
         const location = locationInput.value.trim();
 
@@ -27,11 +29,18 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        clearMarkers(); clearAttractionList();
+        clearMarkers(); 
+        clearAttractionList();
+        updateLocationHeading(cityName || location);
 
         // Pass city name directly to getWeatherData
         getWeatherData(location);
-    };
+    }
+
+    function updateLocationHeading(cityName) {
+        console.log('Updating heading with:', cityName);
+        locationHeading.textContent = cityName;
+    }
 
     function clearMarkers() {
         for (let i = 0; i < markers.length; i++) {
@@ -44,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const attractionList = document.getElementById('attractionList');
         attractionList.innerHTML = '';
         console.log('clear attraction');
-
     }
 
     function getWeatherData(cityName) {
@@ -53,6 +61,13 @@ document.addEventListener('DOMContentLoaded', function () {
         fetch(geocodingUrl)
             .then(response => response.json())
             .then(data => {
+                const coordinates = data.coord;
+    
+                if (!coordinates || typeof coordinates !== 'object') {
+                    console.error('Invalid coordinates data:', coordinates);
+                    throw new Error('Invalid coordinates data');
+                }
+
                 const { lat, lon } = data.coord;
                 const weatherUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
@@ -70,13 +85,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const currentWeather = data.list[0];
         const forecastData = data.list.slice(1, 6);
 
-        // Get the first weather condition from the array (assuming it exists)
         const mainWeatherCondition = currentWeather.weather && currentWeather.weather.length > 0
         ? currentWeather.weather[0].main
         : '';
-        console.log(`Weather condition: ${mainWeatherCondition}`);
 
-        // Function to get the corresponding Bootstrap icon based on the weather condition
         const getWeatherIcon = (condition) => {
             switch (condition.toLowerCase()) {
                 case 'clear':
@@ -96,8 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return 'bi-question';
             }
         };
-    
-        
+
         todayContainer.innerHTML = `
             <h2>${data.city.name}</h2>
             <p>Date: ${new Date(currentWeather.dt * 1000).toLocaleDateString()}</p>
@@ -106,20 +117,18 @@ document.addEventListener('DOMContentLoaded', function () {
             <p>Wind Speed: ${currentWeather.wind.speed} m/s</p>
             <p><i class="${getWeatherIcon(mainWeatherCondition)}"></i></p>
         `;
-    
-        
-        forecastContainer.innerHTML = forecastData.map(day => ` 
-         <div class="col-md-2">
+
+        forecastContainer.innerHTML = forecastData.map(day => `
+            <div class="col-md-2">
                 <p>Date: ${new Date(day.dt * 1000).toLocaleDateString()}</p>
                 <p>Temp: ${convertToCelsius(day.main.temp)}°C</p>
                 <p>Humidity: ${day.main.humidity}%</p>
                 <p>Wind Speed: ${currentWeather.wind.speed} m/s</p>
-            <p><i class="${getWeatherIcon(mainWeatherCondition)}"></i></p>
+                <p><i class="${getWeatherIcon(mainWeatherCondition)}"></i></p>
             </div>
         `).join('');
     }
-    
-   
+
     function convertToCelsius(kelvin) {
         return (kelvin - 273.15).toFixed(2);
     }
@@ -136,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function loadSearchHistory() {
         const searchHistory = JSON.parse(localStorage.getItem('searchHistory')) || [];
         searchHistory.forEach(city => {
-            createHistoryItem(city, getWeatherData);
+            createHistoryItem(city);
         });
     }
 
@@ -145,14 +154,97 @@ document.addEventListener('DOMContentLoaded', function () {
         loadSearchHistory();
     }
 
-    function createHistoryItem(city, weatherDataFunction) {
+    function createHistoryItem(city) {
         const historyItem = document.createElement('button');
         historyItem.textContent = city;
-        historyItem.classList.add('list-group-item', 'list-group-item-action');
+        historyItem.classList.add('nav', 'nav-pills', 'flex-column', 'mb-auto', 'list-group-item', 'list-group-item-action');
         historyItem.addEventListener('click', function () {
             weatherDataFunction(city);
         });
         historyContainer.prepend(historyItem);
+    }
+
+    function weatherDataFunction(city) {
+        placesService.textSearch({
+            query: city,
+        }, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                clearMarkers();
+                clearAttractionList();
+
+                if (results.length > 0) {
+                    map.setCenter(results[0].geometry.location);
+                    const location = results[0].geometry.location;
+
+                    placesService.nearbySearch({
+                        location: location,
+                        radius: 5000,
+                        type: 'tourist_attraction',
+                    }, (nearbyResults, nearbyStatus) => {
+                        if (nearbyStatus === google.maps.places.PlacesServiceStatus.OK) {
+                            for (let i = 0; i < nearbyResults.length; i++) {
+                                createMarker(nearbyResults[i]);
+                                updateAttractionList(nearbyResults[i]);
+                            }
+                        } else {
+                            console.error('Nearby search failed. Please try again.');
+                        }
+                    });
+                }
+
+                for (let i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                    updateAttractionList(results[i]);
+                }
+
+                if (results.length > 0) {
+                    const firstResult = results[0];
+                    const cityName = firstResult.name || firstResult.formatted_address;
+                    getWeatherData(cityName);
+                }
+            } else {
+                displayErrorModal('Location search failed. Please try again.');
+            }
+        });
+    }
+
+    function updateAttractionList(place) {
+        const attractionList = document.getElementById('attractionList');
+
+        const listItem = document.createElement('li');
+
+        listItem.innerHTML = `<strong>${place.name}</strong><br>
+                              Address: ${place.formatted_address}<br>
+                              Rating: ${place.rating || 'N/A'}`;
+        
+        listItem.setAttribute('class', 'list-group-item d-flex justify-content-between align-items-start');
+
+        attractionList.prepend(listItem);
+    }
+
+    function createMarker(place) {
+        const marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location,
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: `<strong>${place.name}</strong><br>${place.formatted_address}`,
+        });
+
+        marker.addListener('click', function () {
+            closeInfoWindows();
+            infoWindow.open(map, marker);
+        });
+
+        markers.push(marker);
+        infoWindows.push(infoWindow);
+    }
+
+    function closeInfoWindows() {
+        for (let i = 0; i < infoWindows.length; i++) {
+            infoWindows[i].close();
+        }
     }
 
     function initMap() {
@@ -169,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         zoom: 12,
                     });
 
-                    const placesService = new google.maps.places.PlacesService(map);
+                    placesService = new google.maps.places.PlacesService(map);
 
                     const locationInput = document.getElementById('locationInput');
                     const autocomplete = new google.maps.places.Autocomplete(locationInput, { types: ['geocode'] });
@@ -186,8 +278,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         placesService.textSearch({
                             query: location,
                         }, (results, status) => {
-                            console.log(results);
-
                             if (status === google.maps.places.PlacesServiceStatus.OK) {
                                 clearMarkers();
                                 clearAttractionList();
@@ -196,14 +286,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                     map.setCenter(results[0].geometry.location);
                                     const location = results[0].geometry.location;
 
-                                    // Perform nearby search around the location
                                     placesService.nearbySearch({
                                         location: location,
-                                        radius: 5000,  // Adjust the radius as needed
-                                        type: 'tourist_attraction',  // Specify the type of places you're interested in [Attractions]
+                                        radius: 5000,
+                                        type: 'tourist_attraction',
                                     }, (nearbyResults, nearbyStatus) => {
                                         if (nearbyStatus === google.maps.places.PlacesServiceStatus.OK) {
-                                            // Display nearby attractions
                                             for (let i = 0; i < nearbyResults.length; i++) {
                                                 createMarker(nearbyResults[i]);
                                                 updateAttractionList(nearbyResults[i]);
@@ -212,7 +300,6 @@ document.addEventListener('DOMContentLoaded', function () {
                                             console.error('Nearby search failed. Please try again.');
                                         }
                                     });
-
                                 }
 
                                 for (let i = 0; i < results.length; i++) {
@@ -231,50 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
                     };
 
-                    function createMarker(place) {
-                        const marker = new google.maps.Marker({
-                            map: map,
-                            position: place.geometry.location,
-                        });
-
-                        const infoWindow = new google.maps.InfoWindow({
-                            content: `<strong>${place.name}</strong><br>${place.formatted_address}`,
-                        });
-
-                        marker.addListener('click', function () {
-                            closeInfoWindows();
-                            getWeatherInfo(place, infoWindow);
-                            infoWindow.open(map, marker);
-                        });
-
-                        markers.push(marker);
-                        infoWindows.push(infoWindow);
-                    }
-
-                    function clearMarkers() {
-                        for (let i = 0; i < markers.length; i++) {
-                            markers[i].setMap(null);
-                        }
-                        markers.length = 0;
-                    }
-
-                    function closeInfoWindows() {
-                        for (let i = 0; i < infoWindows.length; i++) {
-                            infoWindows[i].close();
-                        }
-                    }
-
-                    function updateAttractionList(place) {
-                        const attractionList = document.getElementById('attractionList');
-
-                        const listItem = document.createElement('li');
-
-                        listItem.innerHTML = `<strong>${place.name}</strong><br>
-                                              Address: ${place.formatted_address}<br>
-                                              Rating: ${place.rating || 'N/A'}`;
-
-                        attractionList.prepend(listItem);
-                    }
+                    loadSearchHistory();  // Load search history once the map is initialized
 
                 },
                 (error) => {
