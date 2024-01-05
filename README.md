@@ -35,15 +35,13 @@ Look up your desired holiday destination with the search bar.
 Use this to look up attractions in the location and current weather conditions.
 
 ![image](https://github.com/Zuhra-Y/city-guide-tourists/blob/9c0e01e1dc9e9e685fe87d1e50335d0d5f51c101/assets/Screenshot%202024-01-05%20174612.png)
-
+![image](https://github.com/Zuhra-Y/city-guide-tourists/blob/6a1c9459e03827b1d9ffe0a8d51a26c52d0ee75a/assets/Screenshot%202024-01-05%20174639.png)
 
 Please search for a second location if you need it.
 
-![image]
+![image](https://github.com/Zuhra-Y/city-guide-tourists/blob/5c07c60d5371c0a0412f33ab6268ec883611ec5e/assets/Screenshot%202024-01-05%20174541.png)
 
 Just so you know, your previous location is saved under the search bar.
-
-![image]
 
 If travelling for a long time, type in all your planned destinations at the start of your trip then use the past searches to flick through them when necessary.
 
