@@ -164,6 +164,16 @@ document.addEventListener('DOMContentLoaded', function () {
         historyContainer.prepend(historyItem);
     }
 
+    const clearHistoryButton = document.getElementById('clear_history');
+    clearHistoryButton.addEventListener('click', function () {
+        clearLocalStorage();
+        renderSearchHistory(); // Update the page to display nothing
+    });
+
+    function clearLocalStorage() {
+        localStorage.removeItem('searchHistory');
+    }
+
     function weatherDataFunction(city) {
         placesService.textSearch({
             query: city,
