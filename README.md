@@ -30,7 +30,7 @@ Open the webpage in Google Chrome at the following URL.
 
 Look up your desired holiday destination with the search bar.
 
-![image]
+![image](https://github.com/Zuhra-Y/city-guide-tourists/blob/5c07c60d5371c0a0412f33ab6268ec883611ec5e/assets/Screenshot%202024-01-05%20174541.png)
 
 Use this to look up attractions in the location and current weather conditions.
 
